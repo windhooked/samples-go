@@ -81,6 +81,7 @@ func BatchProcessWorkflow(ctx workflow.Context, param BatchingParam) error {
 		}
 	}
 
+	// drain here and passed on to the future instance of workflow.
 	for {
 		var event BatchProcessEvent
 		more := signalChan.ReceiveAsync(&event)
@@ -94,7 +95,6 @@ func BatchProcessWorkflow(ctx workflow.Context, param BatchingParam) error {
 
 	}
 
-	// can't drain here since I need to process, unless if passed on as param
 	logger.Info(fmt.Sprint("Workflow completed "))
 	return workflow.NewContinueAsNewError(ctx, BatchProcessWorkflow, param)
 
